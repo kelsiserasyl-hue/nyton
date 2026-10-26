@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="kk"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Күш, масса, үдеу — зерттеу зертханасы</title>
+<style>
+:root{--c1:#00e5ff;--gd:#ffd978;--tx:#e8f6ff;--mut:#8fb4cc;--ok:#3dffa8;--bad:#ff5c7a;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:#030b1a radial-gradient(circle at 15% 0,#0b2a5c,#030b1a 65%) fixed;color:var(--tx);font:15px/1.5 system-ui,"Segoe UI",Arial,sans-serif;min-height:100vh}
+.w{max-width:1000px;margin:0 auto;padding:14px}
+h1{font-size:clamp(22px,4.6vw,36px);margin:.2em 0;text-align:center;color:var(--c1);text-shadow:0 0 18px var(--c1)}
+.sub{text-align:center;color:var(--gd);margin-bottom:12px}
+.bd{height:6px;margin:6px auto 12px;max-width:500px;background:repeating-linear-gradient(90deg,var(--gd) 0 10px,transparent 10px 18px);opacity:.6;border-radius:3px}
+.card{position:relative;background:rgba(10,32,64,.7);border:1px solid rgba(0,229,255,.35);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 0 20px rgba(0,229,255,.12)}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:9px 15px;color:#001;font-weight:700;background:linear-gradient(135deg,var(--c1),#2979ff);box-shadow:0 4px 0 #0a3a6a,0 0 12px rgba(0,229,255,.4);transition:transform .1s}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 #0a3a6a}
+button.s{background:transparent;color:var(--c1);border:1px solid var(--c1);box-shadow:none}
+button.on{background:linear-gradient(135deg,#ffe38f,#d9a22b);box-shadow:0 4px 0 #7a5416}
+.tb{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.tb button{flex:1 1 auto}
+canvas{width:100%;height:auto;display:block;background:#020816;border-radius:12px;border:1px solid rgba(0,229,255,.35)}
+.ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:10px 0}
+.ctl label{font-size:14px;color:var(--mut)}.ctl input{width:100%;accent-color:var(--c1)}
+.lk{color:var(--gd);font-size:13px}
+.ro{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px}
+.ro div{background:rgba(0,0,0,.3);border:1px solid rgba(0,229,255,.25);border-radius:10px;padding:5px 10px}.ro small{display:block;color:var(--mut);font-size:12px}.ro b{font-size:18px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}td,th{border:1px solid rgba(0,229,255,.25);padding:4px 7px;text-align:center}th{color:var(--gd)}
+.q{border-top:1px solid rgba(0,229,255,.2);padding:10px 0}
+.q label.o{display:block;padding:6px 10px;margin:4px 0;border-radius:8px;border:1px solid rgba(143,180,204,.3);cursor:pointer}
+.q input[type=text]{background:#020816;color:var(--tx);border:1px solid var(--c1);border-radius:8px;padding:7px;width:120px;font:inherit}
+.fb{margin-top:6px;padding:8px 12px;border-radius:8px;font-size:14px}.ok{background:rgba(61,255,168,.12);border:1px solid var(--ok)}.no{background:rgba(255,92,122,.12);border:1px solid var(--bad)}
+.ch{display:inline-block;padding:4px 12px;border-radius:20px;border:1px solid var(--c1);margin:3px;font-size:13px}.ch.cur{background:var(--gd);color:#2a1a00;border-color:var(--gd);font-weight:700}
+.sc{font-size:44px;font-weight:800;color:var(--c1);text-shadow:0 0 16px var(--c1)}
+.bar{height:11px;border-radius:6px;background:#0a2040;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#2979ff,var(--c1))}
+textarea,input.nm{background:#020816;color:var(--tx);border:1px solid rgba(0,229,255,.5);border-radius:8px;padding:7px;font:inherit;width:100%}
+input.nm{width:130px}
+.vq{border-left:4px solid var(--gd);padding:8px 12px;background:rgba(255,217,120,.08);border-radius:0 10px 10px 0;margin:8px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.two{grid-template-columns:1fr}}
+</style></head><body><div class="w">
+<h1>Ньютонның екінші заңы: күш, масса, үдеу</h1>
+<div class="sub">Құндылыққа баулу: «Әділдік және жауапкершілік»</div><div class="bd"></div>
+<div class="tb" id="gt"></div><div class="tb" id="st"></div><div id="v"></div></div>
+<script>
+const $=s=>document.querySelector(s),f=(x,d=2)=>(+x).toFixed(d).replace('.',',');
+const RL=['Жүргізуші','Тіркеуші','Бақылаушы','Спикер'];
+const GR=[
+{t:'1-топ',h:'Күш өзгереді, масса тұрақты',fix:'m',val:2,xv:'F',fn:x=>x/2,gx:'F, Н',goal:'Дененің массасын тұрақты ұстап, оған әсер ететін қорытқы күшті өзгерткенде үдеудің қалай өзгеретінін зерттейді.',
+ qs:['Күшті арттырғанда үдеу қалай өзгереді?','Күш пен үдеу арасында қандай байланыс бар?','Зерттеу нәтижесі бойынша қорытынды жасаңдар.'],
+ q:[{t:'Массаны тұрақты ұстап, күшті арттырғанда үдеу қалай өзгереді?',o:['Артады','Кемиді','Өзгермейді','Нөлге тең болады'],a:0,e:'a = F/m: масса тұрақты болса, күш артқанда үдеу де артады.'},
+ {t:'Күш пен үдеу арасындағы байланыс қандай?',o:['Тура пропорционал (a ~ F)','Кері пропорционал','Байланыс жоқ','Квадраттық (a ~ F²)'],a:0,e:'m = const болғанда a/F = 1/m тұрақты, яғни a ~ F.'},
+ {t:'Күш 4 Н-нан 8 Н-ға артты (m тұрақты). Үдеу қанша есе артады?',o:['2 есе','4 есе','8 есе','Өзгермейді'],a:0,e:'Күш 2 есе артты, ал үдеу қорытқы күшке тура пропорционал, сондықтан 2 есе артады.'}],
+ c:[{t:'m = 2 кг, F = 10 Н. Үдеуді есептеңдер.',u:'м/с²',ans:5,e:'a = F/m = 10 / 2 = 5 м/с².'}],
+ k:{t:'Қорытынды: масса тұрақты болғанда...',o:['үдеу қорытқы күшке тура пропорционал','үдеу қорытқы күшке кері пропорционал','үдеу күшке тәуелді емес','күш артса, үдеу кемиді'],a:0,e:'Тәжірибе a ~ F тәуелділігін көрсетеді: күш неше есе артса, үдеу сонша есе артады.'}},
+{t:'2-топ',h:'Масса өзгереді, күш тұрақты',fix:'F',val:10,xv:'m',fn:x=>10/x,gx:'m, кг',goal:'Денеге әсер ететін қорытқы күшті тұрақты ұстап, массаны өзгерткенде үдеудің қалай өзгеретінін зерттейді.',
+ qs:['Масса артқанда үдеу қалай өзгереді?','Бірдей күш әсер еткенде массалары әртүрлі денелердің үдеулері бірдей бола ма?','Зерттеу нәтижесі бойынша қорытынды жасаңдар.'],
+ q:[{t:'Күш тұрақты болғанда масса артса, үдеу қалай өзгереді?',o:['Артады','Кемиді','Өзгермейді','Күшке айналады'],a:1,e:'a = F/m: F тұрақты болса, масса артқанда үдеу кемиді.'},
+ {t:'Бірдей күш әсер еткенде массалары әртүрлі денелердің үдеулері бірдей бола ма?',o:['Иә, бірдей','Жоқ, массасы үлкен дененің үдеуі аз','Жоқ, массасы үлкен дененің үдеуі көп','Тек массасы 1 кг болғанда бірдей'],a:1,e:'Бірдей F кезінде a = F/m, сондықтан массасы үлкен дененің үдеуі аз болады.'},
+ {t:'Масса 2 кг-нан 4 кг-ға артты (F тұрақты). Үдеу қалай өзгереді?',o:['2 есе кемиді','2 есе артады','4 есе кемиді','Өзгермейді'],a:0,e:'Масса 2 есе артты, үдеу массаға кері пропорционал, сондықтан 2 есе кемиді.'}],
+ c:[{t:'F = 12 Н, m = 3 кг. Үдеуді есептеңдер.',u:'м/с²',ans:4,e:'a = F/m = 12 / 3 = 4 м/с².'}],
+ k:{t:'Қорытынды: күш тұрақты болғанда...',o:['үдеу массаға кері пропорционал','үдеу массаға тура пропорционал','үдеу массаға тәуелді емес','масса артса, үдеу артады'],a:0,e:'Тәжірибе a ~ 1/m тәуелділігін көрсетеді: масса неше есе артса, үдеу сонша есе кемиді.'}},
+{t:'3-топ',h:'Күш пен масса бірге өзгереді',fix:'',val:0,xv:'Fm',fn:x=>x,gx:'F / m, м/с²',goal:'Қорытқы күш пен масса бір мезгілде өзгергенде дененің үдеуін салыстырады және олардың арасындағы байланысты анықтайды.',
+ qs:['Күш екі есе артса, масса өзгермеген жағдайда үдеу қалай өзгереді?','Масса екі есе артса, күш өзгермеген жағдайда үдеу қалай өзгереді?','Күш пен масса белгілі болса, дененің үдеуін қалай анықтауға болады?'],
+ q:[{t:'Күш 2 есе артса, масса өзгермесе, үдеу қалай өзгереді?',o:['2 есе артады','2 есе кемиді','Өзгермейді','4 есе артады'],a:0,e:'a ~ F: күш 2 есе артса, үдеу де 2 есе артады.'},
+ {t:'Масса 2 есе артса, күш өзгермесе, үдеу қалай өзгереді?',o:['2 есе артады','2 есе кемиді','Өзгермейді','4 есе кемиді'],a:1,e:'a ~ 1/m: масса 2 есе артса, үдеу 2 есе кемиді.'},
+ {t:'Күш пен масса белгілі болса, үдеуді қалай анықтауға болады?',o:['a = F / m','a = F · m','a = m / F','a = F − m'],a:0,e:'Ньютонның екінші заңы: a = F/m.'},
+ {t:'Күш те, масса да 2 есе артса, үдеу қалай өзгереді?',o:['Өзгермейді','2 есе артады','2 есе кемиді','4 есе артады'],a:0,e:'a = 2F/(2m) = F/m, үдеу өзгермейді.'}],
+ c:[{t:'F = 15 Н, m = 5 кг. Үдеуді есептеңдер.',u:'м/с²',ans:3,e:'a = F/m = 15 / 5 = 3 м/с².'}],
+ k:{t:'Қорытынды: үдеу, күш және масса арасындағы байланыс...',o:['a = F/m: үдеу күшке тура, массаға кері пропорционал','a = F·m: үдеу күш пен массаның көбейтіндісіне тең','үдеу тек массаға тәуелді','үдеу тек күшке тәуелді'],a:0,e:'Ньютонның екінші заңы: a = F/m, яғни үдеу қорытқы күшке тура, массаға кері пропорционал.'}}];
+const ST=GR.map(g=>({F:g.fix=='F'?g.val:5,m:g.fix=='m'?g.val:2,tr:[],q:g.q.map(()=>null),c:g.c.map(()=>null),k:null,ck:[0,0,0],nm:['Оқушы 1','Оқушы 2','Оқушы 3','Оқушы 4'],turn:0,tx:''}));
+let gi=0,tab=0,raf=0,S;
+function cnt(i){const c=[0,0,0,0];ST[i].tr.forEach(r=>c[r.w]++);return c}
+function bal(i){const c=cnt(i);return ST[i].tr.length>=4&&Math.max(...c)-Math.min(...c)<=1&&Math.min(...c)>=1}
+function score(i){const s=ST[i],n=a=>a.filter(x=>x===true).length,qa=[...s.q,...s.c],r=Math.min(3,s.tr.length),q=4*n(qa)/qa.length,k=(s.k===true?1:0)+(s.ck.every(x=>x)?1:0)+(bal(i)?1:0);
+ return{r,q,k,sum:Math.round((r+q+k)*10)/10,ok:n(qa)+(s.k===true?1:0),all:qa.length+1,rep:[s.tr.length<3?'тәжірибелерді толықтыру (кемінде 3 түрлі шарт)':'',n(qa)<qa.length?'күш, масса және үдеу байланысы':'',s.k!==true?'қорытынды тұжырымдау':'',!bal(i)?'жұмысты әділ бөлу (әр оқушы кемінде 1 рет тіркесін)':'',!s.ck.every(x=>x)?'жауапкершілік тармақтарын растау':''].filter(Boolean)}}
+function show(){cancelAnimationFrame(raf);$('#gt').innerHTML=GR.map((g,i)=>`<button class="${i==gi?'on':'s'}" onclick="gi=${i};tab=0;show()">${g.t} · ${f(score(i).sum,1)}/10</button>`).join('');
+ $('#st').innerHTML=['Зерттеу','Тапсырма','Қорытынды'].map((n,k)=>`<button class="${k==tab?'on':'s'}" onclick="tab=${k};show()">${n}</button>`).join('');
+ [research,tasks,finish][tab]($('#v'))}
+function item(type,i,q){const n=type+i;return`<div class="q"><b>${q.t}</b>`+(q.o?q.o.map((o,j)=>`<label class="o"><input type="radio" name="${n}" value="${j}"> ${o}</label>`).join(''):`<div><input type="text" inputmode="decimal" id="${n}v" placeholder="Жауабы"> ${q.u}</div>`)+`<div class="tb"><button style="flex:0 0 auto" onclick="chk('${type}',${i})">Тексеру</button></div><div id="${n}f"></div></div>`}
+function chk(type,i){const g=GR[gi],s=ST[gi],q=type=='k'?g.k:g[type][i],n=type+i;let ok;
+ if(q.o){const r=document.querySelector(`input[name="${n}"]:checked`);if(!r)return $('#'+n+'f').innerHTML='<div class="fb no">Алдымен жауап нұсқасын таңдаңыз.</div>';ok=+r.value===q.a}
+ else{const v=parseFloat($('#'+n+'v').value.replace(',','.'));if(isNaN(v))return $('#'+n+'f').innerHTML='<div class="fb no">Жауапты сан түрінде енгізіңіз.</div>';ok=Math.abs(v-q.ans)<=Math.abs(q.ans)*.01+1e-9}
+ if(type=='k')s.k=ok;else s[type][i]=ok;
+ $('#'+n+'f').innerHTML=`<div class="fb ${ok?'ok':'no'}"><b>${ok?'Дұрыс! ✔':'Қате. ✘'}</b> ${ok?'':q.o?'Дұрыс жауап: '+q.o[q.a]+'. ':'Дұрыс жауап: '+f(q.ans)+' '+q.u+'. '}${q.e}</div>`}
+function tasks(b){const g=GR[gi];b.innerHTML=`<div class="card"><b>Формула:</b> <span class="ch">a = F / m</span> <span class="ch">F = m · a</span><h3>Сұрақтар</h3>${g.q.map((q,i)=>item('q',i,q)).join('')}<h3>Есеп</h3>${g.c.map((q,i)=>item('c',i,q)).join('')}</div>`}
+/* зерттеу */
+function research(b){const g=GR[gi],s=ST[gi];S={t:0,v:0,s:0,run:0,rec:0,L:0};
+ const lk=x=>g.fix==x?'disabled':'';
+ b.innerHTML=`<div class="card"><b>${g.t}: ${g.h}</b><p>${g.goal}</p><div class="vq"><b>Зерттеу сұрақтары:</b><br>${g.qs.map((x,i)=>(i+1)+'. '+x).join('<br>')}</div></div>
+ <div class="card"><canvas id="cv" width="900" height="300"></canvas><div class="ctl"><div><label>Қорытқы күш F: <b id="fv"></b> Н ${g.fix=='F'?'<span class="lk">🔒 тұрақты ұсталады</span>':''}</label><input type="range" id="F" min="1" max="20" step="1" ${lk('F')}></div><div><label>Масса m: <b id="mv"></b> кг ${g.fix=='m'?'<span class="lk">🔒 тұрақты ұсталады</span>':''}</label><input type="range" id="m" min=".5" max="10" step=".5" ${lk('m')}></div></div>
+ <div class="tb"><button id="bs">▶ Бастау</button><button id="bp" class="s">⏸ Тоқтату</button><button id="br" class="s">↺ Қайта бастау</button><button id="bt" class="on">📝 Нәтижені тіркеу</button></div><div class="lk">Үйкеліс ескерілмейді. Тәжірибе ең көбі 4 секунд жалғасады. Өлшемдер автоматты тіркеледі, оларды өзгертуге болмайды.</div>
+ <div class="ro" style="margin-top:8px"><div><small>Үдеу a = F/m</small><b id="ra"></b> м/с²</div><div><small>Уақыт t</small><b id="rt"></b> с</div><div><small>Жылдамдық v</small><b id="rv"></b> м/с</div><div><small>Жол s</small><b id="rs"></b> м</div><div><small>Өлшенген a = v/t</small><b id="rm"></b> м/с²</div></div><div id="msg" class="lk" style="margin-top:6px"></div></div>
+ <div class="card"><b>Әділдік және жауапкершілік:</b> тіркеу кезегі бойынша жүреді. Кезектегі оқушы нәтижені тіркейді.<div class="tb" id="nm">${s.nm.map((n,k)=>`<input class="nm" value="${n}" oninput="ST[gi].nm[${k}]=this.value;rl()">`).join('')}</div><div id="rl"></div></div>
+ <div class="two"><div class="card"><b>Тіркелген тәжірибелер</b><div id="tb"></div></div><div class="card"><b>a – ${g.gx} графигі</b><canvas id="gr" width="440" height="280"></canvas></div></div>`;
+ $('#F').value=s.F;$('#m').value=s.m;
+ const rst=()=>{S.t=S.v=S.s=S.run=S.rec=0;S.L=0};
+ $('#F').oninput=e=>{s.F=+e.target.value;rst()};$('#m').oninput=e=>{s.m=+e.target.value;rst()};
+ $('#bs').onclick=()=>{if(S.t>=4)rst();S.run=1};$('#bp').onclick=()=>S.run=0;$('#br').onclick=()=>{rst();S.run=1};
+ $('#bt').onclick=()=>{const m=$('#msg');if(S.t<.5){m.textContent='Алдымен тәжірибені іске қосыңыз (кемінде 0,5 с).';return}
+  if(S.rec){m.textContent='Бұл тәжірибе тіркелген. Параметрді өзгертіңіз немесе қайта бастаңыз.';return}
+  if(s.tr.some(r=>r.F==s.F&&r.m==s.m)){m.textContent='Мұндай шарт бұрын тіркелген. Күшті немесе массаны өзгертіңіз.';return}
+  s.tr.push({F:s.F,m:s.m,t:S.t,v:S.v,w:s.turn%4});s.turn++;S.rec=1;m.textContent='Тіркелді ✔ Келесі кезек: '+s.nm[s.turn%4];tbl();rl();gph()};
+ rl();tbl();gph();loop()}
+function rl(){const s=ST[gi],c=cnt(gi);$('#rl').innerHTML=s.nm.map((n,k)=>`<span class="ch ${k==s.turn%4?'cur':''}">${n}: ${c[k]} тіркеу${k==s.turn%4?' ← кезек':''}</span>`).join('')}
+function tbl(){const s=ST[gi];$('#tb').innerHTML=s.tr.length?`<table><tr><th>№</th><th>Кім</th><th>F, Н</th><th>m, кг</th><th>t, с</th><th>v, м/с</th><th>a, м/с²</th></tr>${s.tr.map((r,i)=>`<tr><td>${i+1}</td><td>${s.nm[r.w]}</td><td>${r.F}</td><td>${f(r.m,1)}</td><td>${f(r.t)}</td><td>${f(r.v)}</td><td>${f(r.v/r.t)}</td></tr>`).join('')}</table>`:'<span class="lk">Әзірге тәжірибе жоқ.</span>'}
+function gph(){const g=GR[gi],s=ST[gi],c=$('#gr').getContext('2d'),W=440,H=280,xs=r=>g.xv=='F'?r.F:g.xv=='m'?r.m:r.F/r.m,xm=g.xv=='F'?20:g.xv=='m'?10:40,ym=g.xv=='F'?10:g.xv=='m'?20:40;
+ const X=x=>45+x/xm*(W-60),Y=y=>H-30-Math.min(y,ym)/ym*(H-50);c.clearRect(0,0,W,H);c.strokeStyle='#27547d';c.fillStyle='#8fb4cc';c.font='12px system-ui';c.strokeRect(45,20,W-60,H-50);
+ for(let i=0;i<=4;i++){c.fillText(f(xm*i/4,0),X(xm*i/4)-6,H-14);c.fillText(f(ym*i/4,0),12,Y(ym*i/4)+4)}c.fillText(g.gx,W-90,H-2);c.fillText('a, м/с²',4,14);
+ c.strokeStyle='#ffd97888';c.setLineDash([5,5]);c.beginPath();for(let x=xm/200;x<=xm;x+=xm/100){const y=g.fn(x);x==xm/200?c.moveTo(X(x),Y(y)):c.lineTo(X(x),Y(y))}c.stroke();c.setLineDash([]);
+ s.tr.forEach(r=>{c.fillStyle='#00e5ff';c.shadowColor='#00e5ff';c.shadowBlur=8;c.beginPath();c.arc(X(xs(r)),Y(r.v/r.t),6,0,7);c.fill()});c.shadowBlur=0;c.fillStyle='#ffd978';c.fillText('- - теория a = F/m',W-150,34)}
+function loop(){const g=GR[gi],s=ST[gi],cv=$('#cv'),c=cv.getContext('2d'),W=900,H=300;let last=performance.now();
+ (function fr(n){const dt=Math.min(.05,(n-last)/1e3);last=n;const a=s.F/s.m;
+  if(S.run){S.t+=dt;if(S.t>=4){S.t=4;S.run=0}S.v=a*S.t;S.s=a*S.t*S.t/2}
+  $('#fv').textContent=s.F;$('#mv').textContent=f(s.m,1);$('#ra').textContent=f(a);$('#rt').textContent=f(S.t);$('#rv').textContent=f(S.v);$('#rs').textContent=f(S.s,1);$('#rm').textContent=S.t>0?f(S.v/S.t):'—';
+  const gr=c.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#071a3d');gr.addColorStop(1,'#0e4a7a');c.fillStyle=gr;c.fillRect(0,0,W,H);const gy=222;c.fillStyle='#0b2447';c.fillRect(0,gy,W,H-gy);c.fillStyle='#d9a22b';c.fillRect(0,gy,W,3);
+  const px=Math.min(14,60/Math.max(1,Math.sqrt(a)+1)*1.3),cx=300;c.font='12px system-ui';
+  for(let k=Math.floor((S.s-cx/px)/5)-1;k<=Math.ceil((S.s+(W-cx)/px)/5);k++){const x=cx+(k*5-S.s)*px;c.fillStyle='#5ff2e0';c.fillRect(x,gy,2,14);c.fillText(k*5+' м',x-8,gy+30)}
+  c.fillStyle='rgba(0,0,0,.4)';c.beginPath();c.ellipse(cx+75,gy+4,100,9,0,0,7);c.fill();
+  const bw=34+s.m*8,bh=20+s.m*3,by=gy-44-bh;let gg=c.createLinearGradient(0,by,0,by+bh);gg.addColorStop(0,'#ffe38f');gg.addColorStop(1,'#b8860b');c.fillStyle=gg;c.fillRect(cx+75-bw/2,by,bw,bh);c.fillStyle='#3a2400';c.font='bold 14px system-ui';c.fillText(f(s.m,1)+' кг',cx+75-bw/2+6,by+bh/2+5);
+  gg=c.createLinearGradient(0,gy-44,0,gy-14);gg.addColorStop(0,'#5fb3ff');gg.addColorStop(1,'#1a4f9c');c.fillStyle=gg;c.beginPath();c.roundRect?c.roundRect(cx,gy-44,150,30,6):c.rect(cx,gy-44,150,30);c.fill();
+  [35,115].forEach(o=>{c.save();c.translate(cx+o,gy-12);c.rotate(S.s*px/13);c.fillStyle='#111';c.beginPath();c.arc(0,0,13,0,7);c.fill();c.strokeStyle='#ffd978';c.lineWidth=2;c.beginPath();c.moveTo(-10,0);c.lineTo(10,0);c.moveTo(0,-10);c.lineTo(0,10);c.stroke();c.restore()});
+  const ar=(x,y,l,col,t)=>{c.strokeStyle=c.fillStyle=col;c.lineWidth=4;c.beginPath();c.moveTo(x,y);c.lineTo(x+l,y);c.stroke();c.beginPath();c.moveTo(x+l+12,y);c.lineTo(x+l,y-7);c.lineTo(x+l,y+7);c.fill();c.font='bold 15px system-ui';c.fillText(t,x,y-10)};
+  ar(cx-12-s.F*7,gy-30,s.F*7,'#ff8a65','F = '+s.F+' Н');ar(cx+10,by-30,Math.min(a*6,300),'#3dffa8','a = '+f(a)+' м/с²');
+  raf=requestAnimationFrame(fr)})(last)}
+function finish(b){const g=GR[gi],s=ST[gi],sc=score(gi),cn=cnt(gi),B=bal(gi);
+ const cks=['Барлық өлшемдер шынайы тіркелді, мәндерді өзгертпедік.','Жұмысты әрқайсымыз кезекпен әділ орындадық.','Ортақ қорытындыға бәріміз келістік және жауапкершілікпен келдік.'];
+ b.innerHTML=`<div class="card"><h3 style="margin-top:0">Қорытынды жасау</h3>${item('k',0,g.k)}<label style="color:var(--mut)">Өз сөзіңізбен қорытынды (міндетті емес):</label><textarea rows="3" oninput="ST[gi].tx=this.value">${s.tx}</textarea></div>
+ <div class="card"><h3 style="margin-top:0">Әділдік және жауапкершілік</h3><p>Тіркеулер бойынша үлес: ${s.nm.map((n,k)=>`<span class="ch">${n}: ${cn[k]}</span>`).join('')}</p><p class="${B?'':'lk'}">${B?'✔ Жұмыс әділ бөлінген: әр оқушы кемінде бір рет тіркеді.':'Әділ бөлу шарты: кемінде 4 тәжірибе, әр оқушы кемінде 1 рет тіркейді, айырмашылық 1-ден аспайды.'}</p>
+ ${cks.map((t,k)=>`<label style="display:block;margin:5px 0"><input type="checkbox" ${s.ck[k]?'checked':''} onchange="ST[gi].ck[${k}]=this.checked?1:0"> ${t}</label>`).join('')}</div>
+ <div class="card"><button onclick="show()">Нәтижені жаңарту</button><div class="sc">${f(sc.sum,1)} / 10</div><div class="bar"><i style="width:${sc.sum*10}%"></i></div>
+ <p>Зерттеу: ${f(sc.r,0)}/3 · Тапсырма: ${f(sc.q)}/4 · Қорытынды және құндылық: ${sc.k}/3<br>Дұрыс жауаптар: <b>${sc.ok}</b> / ${sc.all} · Тіркелген тәжірибе: <b>${s.tr.length}</b></p>
+ <p>${sc.rep.length?'<b>Қайталау керек:</b> '+sc.rep.join('; ')+'.':'Тамаша жұмыс! Барлық бөлім орындалды. 🎉'}</p></div>`}
+show();
+</script></body></html>
